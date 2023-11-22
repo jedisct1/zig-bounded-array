@@ -6,7 +6,7 @@ It can be used as a variable-length array that can be freely resized up to the s
 
 If you're looking for a Zig equivalent to Rust's super useful `ArrayVec`, this is it.
 
-It is very useful to pass around small arrays whose exact size is only known at runtime, but whose maximum size is known at comptime, without requiring an `Allocator`.
+It is useful to pass around small arrays whose exact size is only known at runtime, but whose maximum size is known at comptime, without requiring an `Allocator`.
 
 Bounded arrays are easier and safer to use than maintaining buffers and active lengths separately, or involving structures that include pointers.
 
