@@ -42,6 +42,10 @@ pub fn BoundedArrayAligned(
         const Len = std.math.IntFittingRange(0, buffer_capacity);
 
         buffer: [buffer_capacity]T align(alignment) = undefined,
+
+        /// The active array length. Not that in order to save space, this is not
+        /// a `usize`, but rather the smallest integer type that can hold the
+        /// maximum capacity. In order to get the length as a `usize`, use `sliceLength()`.
         len: Len = 0,
 
         /// Set the actual length of the slice.
@@ -92,6 +96,11 @@ pub fn BoundedArrayAligned(
         /// Return the maximum length of a slice.
         pub fn capacity(self: Self) usize {
             return self.buffer.len;
+        }
+
+        /// Return the current length of the slice.
+        pub fn sliceLength(self: Self) usize {
+            return self.len;
         }
 
         /// Check that the slice can hold at least `additional_count` items.
