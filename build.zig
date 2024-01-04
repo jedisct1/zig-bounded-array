@@ -5,7 +5,7 @@ pub fn build(b: *std.Build) void {
     const optimize = b.standardOptimizeOption(.{});
 
     _ = b.addModule("bounded_array", .{
-        .source_file = .{ .path = "src/bounded_array.zig" },
+        .root_source_file = .{ .path = "src/bounded_array.zig" },
     });
 
     const main_tests = b.addTest(.{
