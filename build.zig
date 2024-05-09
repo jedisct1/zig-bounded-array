@@ -5,11 +5,11 @@ pub fn build(b: *std.Build) void {
     const optimize = b.standardOptimizeOption(.{});
 
     _ = b.addModule("bounded_array", .{
-        .root_source_file = .{ .path = "src/bounded_array.zig" },
+        .root_source_file = b.path("src/bounded_array.zig"),
     });
 
     const main_tests = b.addTest(.{
-        .root_source_file = .{ .path = "src/bounded_array.zig" },
+        .root_source_file = b.path("src/bounded_array.zig"),
         .target = target,
         .optimize = optimize,
     });
