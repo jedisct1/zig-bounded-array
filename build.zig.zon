@@ -2,6 +2,9 @@
     .name = .bounded_array,
     .fingerprint = 0x7cda5952a915d54,
     .version = "0.1.0",
-    .dependencies = .{ },
-    .paths = .{ "" },
+    .dependencies = .{},
+    .paths = .{
+        "build.zig", "build.zig.zon", "LICENSE", "README.md",
+        "src",
+    },
 }
