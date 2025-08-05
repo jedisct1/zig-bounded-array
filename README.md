@@ -19,12 +19,10 @@ var slice = a.slice(); // a slice of the 64-byte array
 var a_clone = a; // creates a copy - the structure doesn't use any internal pointers
 ```
 
-# Update: archived.
+# Update: unarchived.
 
-The main point of that fork was to keep the length being a `usize`,
-because returning a different type was a footgun (adding lengths, in
-particular, could easily trigger an overflow).
+`BoundedArray` is an extremely convenient structure, which (IMHO) greatly contributes to making code using small arrays safe and simple.
 
-However, that change was eventually
-[reverted](https://github.com/ziglang/zig/commit/85747b266aac8a2ff7fea4a4b18f722133544ad7),
-so applications should just go back to using the type from the standard library.
+Unfortunately, it has been removed from the standard library.
+
+If you want the convenience of `BoundedArray` back, you can add this repository as a dependency.
