@@ -135,8 +135,8 @@ pub fn BoundedArrayAligned(
         /// Resize the slice, adding `n` new elements, which have `undefined` values.
         /// The return value is a slice pointing to the uninitialized elements.
         pub fn addManyAsSlice(self: *Self, n: usize) error{Overflow}![]align(alignment) T {
-            const prev_len = self.len;
-            try self.resize(self.len + n);
+            const prev_len = self.len();
+            try self.resize(self.len() + n);
             return self.slice()[prev_len..][0..n];
         }
 
@@ -288,7 +288,7 @@ pub fn BoundedArrayAligned(
             @compileError("The Writer interface is only defined for BoundedArray(u8, ...) " ++
                 "but the given type is BoundedArray(" ++ @typeName(T) ++ ", ...)")
         else
-            std.io.Writer(*Self, error{Overflow}, appendWrite);
+            std.io.GenericWriter(*Self, error{Overflow}, appendWrite);
 
         /// Initializes a writer which will write into the array.
         pub fn writer(self: *Self) Writer {
@@ -401,7 +401,7 @@ test "BoundedArray" {
 
     const added_slice = try a.addManyAsSlice(3);
     try testing.expectEqual(added_slice.len, 3);
-    try testing.expectEqual(a.len, 36);
+    try testing.expectEqual(a.len(), 36);
 
     while (a.popOrNull()) |_| {}
     const w = a.writer();

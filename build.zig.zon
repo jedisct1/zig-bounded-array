@@ -1,5 +1,6 @@
 .{
-    .name = "bounded_array",
+    .name = .bounded_array,
+    .fingerprint = 0x7cda5952a915d54,
     .version = "0.1.0",
     .dependencies = .{ },
     .paths = .{ "" },
