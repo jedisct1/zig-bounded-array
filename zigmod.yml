@@ -1,0 +1,5 @@
+id: od6p27pso9nz207mosffsk8fe5nbed5c7rh11b8ooko52t6o
+name: bounded-array
+main: src/bounded_array.zig
+license: MIT
+description: A `BoundedArray` is a structure containing a fixed-size array, as well as the length currently being used.
