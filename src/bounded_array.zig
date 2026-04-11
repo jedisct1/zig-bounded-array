@@ -277,18 +277,40 @@ pub fn BoundedArrayAligned(
             @compileError("The Writer interface is only defined for BoundedArray(u8, ...) " ++
                 "but the given type is BoundedArray(" ++ @typeName(T) ++ ", ...)")
         else
-            std.io.GenericWriter(*Self, error{Overflow}, appendWrite);
+            struct {
+                bounded: *Self,
+                interface: std.Io.Writer,
+
+                fn drain(w: *std.Io.Writer, data: []const []const u8, splat: usize) std.Io.Writer.Error!usize {
+                    const bw: *Writer = @alignCast(@fieldParentPtr("interface", w));
+                    var total: usize = 0;
+                    for (data[0 .. data.len - 1]) |bytes| {
+                        bw.bounded.appendSlice(bytes) catch return error.WriteFailed;
+                        total += bytes.len;
+                    }
+                    const pattern = data[data.len - 1];
+                    for (0..splat) |_| {
+                        bw.bounded.appendSlice(pattern) catch return error.WriteFailed;
+                        total += pattern.len;
+                    }
+                    w.end = 0;
+                    return total;
+                }
+            };
 
         /// Initializes a writer which will write into the array.
         pub fn writer(self: *Self) Writer {
-            return .{ .context = self };
-        }
-
-        /// Same as `appendSlice` except it returns the number of bytes written, which is always the same
-        /// as `m.len`. The purpose of this function existing is to match `std.io.GenericWriter` API.
-        fn appendWrite(self: *Self, m: []const u8) error{Overflow}!usize {
-            try self.appendSlice(m);
-            return m.len;
+            return .{
+                .bounded = self,
+                .interface = .{
+                    .vtable = &.{
+                        .drain = Writer.drain,
+                        .flush = std.Io.Writer.noopFlush,
+                        .rebase = std.Io.Writer.failingRebase,
+                    },
+                    .buffer = &.{},
+                },
+            };
         }
     };
 }
@@ -393,9 +415,9 @@ test BoundedArray {
     try testing.expectEqual(a.len, 36);
 
     while (a.pop()) |_| {}
-    const w = a.writer();
+    var w = a.writer();
     const s = "hello, this is a test string";
-    try w.writeAll(s);
+    try w.interface.writeAll(s);
     try testing.expectEqualStrings(s, a.constSlice());
 }
 
