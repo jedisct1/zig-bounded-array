@@ -99,7 +99,7 @@ pub fn BoundedArrayAligned(
         }
 
         /// Check that the slice can hold at least `additional_count` items.
-        pub fn ensureUnusedCapacity(self: Self, additional_count: usize) error{Overflow}!void {
+        pub fn ensureUnusedCapacity(self: *Self, additional_count: usize) error{Overflow}!void {
             if (self.len + additional_count > buffer_capacity) {
                 return error.Overflow;
             }
